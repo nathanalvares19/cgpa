@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 import { google } from "googleapis";
 
 const SHEET_ID = "1wnMfIIqaukOiZLgFX4rb3zBr0dUS-clLV7hpfTlU40E";
-const RANGE = "Sheet1!A2:F";
+const RANGE = "testing!A2:F";
 
 const BASE_ID = 13720 - 42; // roll 42 → id 13720
 
@@ -58,6 +58,7 @@ async function run() {
       const sem1 = valid[0]?.sgpa ?? "";
       const sem2 = valid[1]?.sgpa ?? "";
       const sem3 = valid[2]?.sgpa ?? "";
+      const sem4 = valid[3]?.sgpa ?? "";
       const cgpa = valid.at(-1)?.cgpa ?? "";
 
       await sheets.spreadsheets.values.append({
@@ -65,7 +66,7 @@ async function run() {
         range: RANGE,
         valueInputOption: "RAW",
         requestBody: {
-          values: [["", rollNo, sem1, sem2, sem3, cgpa]],
+          values: [["", rollNo, sem1, sem2, sem3, sem4, cgpa]],
         },
       });
 
