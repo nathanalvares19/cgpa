@@ -2,9 +2,10 @@ import puppeteer from "puppeteer";
 import { google } from "googleapis";
 
 const SHEET_ID = "1wnMfIIqaukOiZLgFX4rb3zBr0dUS-clLV7hpfTlU40E";
-const RANGE = "Sheet1!A2:F";
+const RANGE = "testing!F2:G";
 
-const BASE_ID = 13720 - 42; // roll 42 → id 13720
+const BASE_ID = 13720 - 42; // civil
+// const BASE_ID = 13636 - 2; // bm
 
 async function run() {
   // 1. Launch real Chrome (NOT headless)
@@ -16,7 +17,7 @@ async function run() {
   const page = await browser.newPage();
 
   // 2. Open login page
-  await page.goto("https://aims.iith.ac.in/aims/login", {
+  await page.goto("https://aims.iith.ac.in/aims/", {
     waitUntil: "networkidle2",
   });
 
@@ -45,27 +46,29 @@ async function run() {
               "x-requested-with": "XMLHttpRequest",
             },
             credentials: "include",
-          }
+          },
         );
         return res.json();
       }, studentId);
 
       // filter + sort semesters
       const valid = data
-        .filter((d) => d.sgpa !== "-" && d.cgpa !== "-")
+        // .filter((d) => d.sgpa !== "-" && d.cgpa !== "-")
         .sort((a, b) => a.periodId - b.periodId);
 
-      const sem1 = valid[0]?.sgpa ?? "";
-      const sem2 = valid[1]?.sgpa ?? "";
-      const sem3 = valid[2]?.sgpa ?? "";
-      const cgpa = valid.at(-1)?.cgpa ?? "";
+      // const sem1 = valid[0]?.sgpa ?? "";
+      // const sem2 = valid[1]?.sgpa ?? "";
+      // const sem3 = valid[2]?.sgpa ?? "";
+      const sem4 = valid[3]?.sgpa ?? "";
+      const cgpa = valid.at(3)?.cgpa ?? "";
 
-      await sheets.spreadsheets.values.append({
+      await sheets.spreadsheets.values.update({
         spreadsheetId: SHEET_ID,
         range: RANGE,
         valueInputOption: "RAW",
+        // insertDataOption: "INSERT_ROWS",
         requestBody: {
-          values: [["", rollNo, sem1, sem2, sem3, cgpa]],
+          values: [[sem4, cgpa]],
         },
       });
 

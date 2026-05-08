@@ -5,7 +5,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Credentials & Environment
-# credentials.json
+credentials.json
 *.env
 .env
 .env.local
